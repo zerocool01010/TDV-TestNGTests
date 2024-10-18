@@ -1,6 +1,8 @@
 import org.example.Persona;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.text.ParseException;
@@ -21,13 +23,21 @@ public class PersonaTest {
         };
     }
 
-    @Test(dataProvider = "GeneradorPersona")
+    @Test(dataProvider = "GeneradorPersona", invocationCount = 2)
     public void testEdadBienCalculada(Persona p) {
 
         int edadReportada = p.getEdad();
         int edadReal= getEdad(p.getFechaNacimiento());
         Assert.assertTrue(edadReportada == edadReal);
         //Assert.assertTrue("Fallo en el calculo de la edad",edadReportada == edadReal);
+    }
+
+    @Test(invocationCount = 2)
+    @Parameters({"nombre","dni","fnac"})
+    public void testConParametros(@Optional("Pepe") String nombre , @Optional("20.345.678") String dni, @Optional("2001-2-3")String fNac)
+    {
+        Persona p = new Persona(nombre, dni, fNac, 0, false);
+        System.out.println(p);
     }
 
     public int getEdad(String fechaNacimiento) {
